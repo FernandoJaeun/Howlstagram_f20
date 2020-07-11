@@ -17,7 +17,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
 
-        email_loginbtn.setOnClickListener { createAccount(email_edittext.text.toString(), password_edittext.text.toString()) }
+        email_sign_in_btn.setOnClickListener { createAccount(email_edittext.text.toString(), password_edittext.text.toString()) }
     }
 
     override fun onStart() {
@@ -27,13 +27,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createAccount(email: String, password: String) {
+        auth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                // 로그인 성공
+                moveMainPage(task.result?.user)
+                Toast.makeText(this, "asdasd", Toast.LENGTH_SHORT).show()
+            }else{
+                // 로그인 실패. 사유 전달
+            }
+        }
         // show Progress Bar()
         auth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 Toast.makeText(this, "Hello! My new User", Toast.LENGTH_SHORT).show()
                 moveMainPage(task.result?.user)
-            }else{
-                Toast.makeText(this, "Ooops, something is happened",Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Ooops, something is happened", Toast.LENGTH_LONG).show()
             }
         }
         // hide progress Bar()

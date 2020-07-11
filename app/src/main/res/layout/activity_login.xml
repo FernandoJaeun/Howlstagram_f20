@@ -47,15 +47,32 @@
                 android:hint="@string/password" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/email_loginbtn"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/colorWhite"
-            android:text="@string/signin_email" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/email_sign_in_btn"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@color/colorEmailSignIn"
+                android:text="@string/sign_in_email" />
+
+            <Button
+                android:id="@+id/email_sign_up_btn"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/sign_up_email" />
+        </LinearLayout>
 
         <Button
             android:layout_width="match_parent"
