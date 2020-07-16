@@ -7,55 +7,59 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
-import org.w3c.dom.Text
 
 class LoginActivity : AppCompatActivity() {
-    var auth: FirebaseAuth? = null
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
-
-        email_sign_in_btn.setOnClickListener { createAccount(email_edittext.text.toString(), password_edittext.text.toString()) }
+        email_sign_in_btn.setOnClickListener(){signInAndSignUp()}
     }
 
-    override fun onStart() {
-        super.onStart()
-        val currentUser = auth?.currentUser
-        updateUI(currentUser)
-    }
-
-    private fun createAccount(email: String, password: String) {
-        auth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                // 로그인 성공
-                moveMainPage(task.result?.user)
-                Toast.makeText(this, "asdasd", Toast.LENGTH_SHORT).show()
-            }else{
-                // 로그인 실패. 사유 전달
+    private fun signInAndSignUp() {
+        auth.createUserWithEmailAndPassword(email_edit_text.text.toString(), password_edit_text.text.toString())
+            ?.addOnCompleteListener(this) { task ->
+                when {
+                    task.isSuccessful -> {
+                        // Creating a user account
+                        Toast.makeText(this, "회원가입 되었습니다", Toast.LENGTH_SHORT).show()
+                        moveMainPage(task.result!!.user)
+                    }
+                    task.exception?.message.isNullOrEmpty() -> {
+                        // Show the error message
+                        Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        // Login if you have account
+                        signInEmail()
+                    }
+                }
             }
-        }
-        // show Progress Bar()
-        auth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                Toast.makeText(this, "Hello! My new User", Toast.LENGTH_SHORT).show()
-                moveMainPage(task.result?.user)
-            } else {
-                Toast.makeText(this, "Ooops, something is happened", Toast.LENGTH_LONG).show()
+    }
+
+    private fun signInEmail() {
+        auth.signInWithEmailAndPassword(email_edit_text.text.toString(), password_edit_text.text.toString())
+            ?.addOnCompleteListener() { task ->
+                if (task.isSuccessful) {
+                    //Login
+                    Toast.makeText(this, "로그인 되었습니다", Toast.LENGTH_SHORT).show()
+                    moveMainPage(task.result!!.user)
+                } else {
+                    // Show the error message
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                }
             }
+    }
+
+    private fun moveMainPage(user: FirebaseUser?){
+        if(user != null){
+            startActivity((Intent(this, MainActivity::class.java)))
         }
-        // hide progress Bar()
+
     }
 
-    private fun moveMainPage(user: FirebaseUser?) {
-        val intent = Intent(this, MainActivity::class.java).apply { user }
-        startActivity(intent)
-    }
-
-
-    private fun updateUI(currentUser: FirebaseUser?) {
-    }
 
 }
 

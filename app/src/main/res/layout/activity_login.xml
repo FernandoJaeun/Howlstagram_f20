@@ -28,7 +28,7 @@
             android:layout_marginRight="20dp">
 
             <EditText
-                android:id="@+id/email_edittext"
+                android:id="@+id/email_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email" />
@@ -41,7 +41,8 @@
             android:layout_marginRight="20dp">
 
             <EditText
-                android:id="@+id/password_edittext"
+                android:inputType="textPassword"
+                android:id="@+id/password_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password" />
@@ -70,7 +71,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorAccent"
                 android:text="@string/sign_up_email" />
         </LinearLayout>
 
@@ -80,8 +81,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="45dp"
             android:layout_marginRight="20dp"
-            android:background="@drawable/btn_signin_facebook"
-            android:text="@string/signin_facebook" />
+            android:background="@drawable/btn_sign_in_facebook"
+            android:text="@string/sign_in_facebook" />
 
         <Button
             android:layout_width="match_parent"
@@ -90,7 +91,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/btn_signin_google"
-            android:text="@string/signin_google" />
+            android:background="@drawable/btn_sign_in_google"
+            android:text="@string/sign_in_google" />
     </LinearLayout>
 </RelativeLayout>
