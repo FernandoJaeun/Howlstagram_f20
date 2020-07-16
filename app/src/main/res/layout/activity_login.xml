@@ -85,6 +85,7 @@
             android:text="@string/sign_in_facebook" />
 
         <Button
+            android:id="@+id/sign_in_by_google"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
