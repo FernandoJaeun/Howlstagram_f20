@@ -24,27 +24,27 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
 
-        var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        this.googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         email_sign_in_btn.setOnClickListener() { signInAndSignUp() }
         sign_in_by_google.setOnClickListener() { googleLogin() }
     }
 
     private fun googleLogin() {
-        var signInIntent = googleSignInClient?.signInIntent
+        val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, GOOGLE_LOGIN_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GOOGLE_LOGIN_CODE) {
-            var result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if (result!!.isSuccess) {
-                var account = result.signInAccount
+                val account = result.signInAccount
                 firebaseAuthWithGoogle(account)
 
             }
@@ -52,14 +52,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
-        var credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-        auth?.signInWithCredential(credential)
-            ?.addOnCompleteListener() { task ->
+        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
                     // Login
                     Toast.makeText(this, "구글 아이디로 로그인 되었습니다", Toast.LENGTH_SHORT).show()
                     moveMainPage(task.result!!.user)
-                }else{
+                } else {
                     // Show the error message
                     Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
                 }
@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun signInAndSignUp() {
         auth.createUserWithEmailAndPassword(email_edit_text.text.toString(), password_edit_text.text.toString())
-            ?.addOnCompleteListener(this) { task ->
+            .addOnCompleteListener(this) { task ->
                 when {
                     task.isSuccessful -> {
                         // Creating a user account
@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun signInEmail() {
         auth.signInWithEmailAndPassword(email_edit_text.text.toString(), password_edit_text.text.toString())
-            ?.addOnCompleteListener() { task ->
+            .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
                     //Login
                     Toast.makeText(this, "로그인 되었습니다", Toast.LENGTH_SHORT).show()
