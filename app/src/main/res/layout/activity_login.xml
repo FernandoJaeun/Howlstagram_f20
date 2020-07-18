@@ -61,7 +61,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="@color/colorEmailSignIn"
+                android:background="@color/colorPrimary"
                 android:text="@string/sign_in_email" />
 
             <Button

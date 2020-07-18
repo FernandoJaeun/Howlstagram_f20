@@ -73,34 +73,40 @@ class AddPhotoActivity : AppCompatActivity() {
         // 사진 저장 경로 지정
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
 
+
         // Promise Method , 사진 업로드
         storageRef?.putFile(photoUri!!)?.continueWith { task: Task<UploadTask.TaskSnapshot> ->
             return@continueWith storageRef.downloadUrl
-        }?.addOnSuccessListener { uri ->
-            var contentDTO = ContentDTO()
+        }?.addOnSuccessListener { uri -> var contentDTO = ContentDTO() }
 
-            // 이미지 경로 Uniform Resource Locator, (URI = Uniform Resource Identifier)
-            contentDTO.imageUrl = uri.toString()
+        //Callback method
+        storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+                var contentDTO = ContentDTO()
 
-            // 이미지에 대한 설명을 저장
-            contentDTO.explain = add_photo_edit_explain.text.toString()
+                // 이미지 경로 Uniform Resource Locator, (URI = Uniform Resource Identifier)
+                contentDTO.imageUrl = uri.toString()
 
-            // 유저가 로그인할 때 사용한 그 아이디! 도메인네임이라고 보면 된다.
-            contentDTO.userId = auth?.currentUser?.email
+                // 이미지에 대한 설명을 저장
+                contentDTO.explain = add_photo_edit_explain.text.toString()
 
-            // 유저 식별자! IP 주소라고 보면 된다. UserID나 uid 둘 다 고유한 ID 이지만, 사람이 보기 편한것과 시스템에서 구분하기 편한 것의 차이가 있는 것 같다
-            contentDTO.uid = auth?.currentUser?.uid
+                // 유저가 로그인할 때 사용한 그 아이디! 도메인네임이라고 보면 된다.
+                contentDTO.userId = auth?.currentUser?.email
 
-            // 업로드 시간을 알기 위한 것
-            contentDTO.timeStamp = System.currentTimeMillis()
+                // 유저 식별자! IP 주소라고 보면 된다. UserID나 uid 둘 다 고유한 ID 이지만, 사람이 보기 편한것과 시스템에서 구분하기 편한 것의 차이가 있는 것 같다
+                contentDTO.uid = auth?.currentUser?.uid
 
-            // 위의 모든 것을 images 폴더에 사진과 함께 저장!
-            firestore?.collection("images").document()?.set(contentDTO)
-            setResult(Activity.RESULT_OK)
-            Toast.makeText(this, R.string.upload_success, Toast.LENGTH_SHORT).show()
-            finish()
+                // 업로드 시간을 알기 위한 것
+                contentDTO.timeStamp = System.currentTimeMillis()
+
+                // 위의 모든 것을 images 폴더에 사진과 함께 저장!
+                firestore?.collection("images").document()?.set(contentDTO)
+
+                setResult(Activity.RESULT_OK)
+                Toast.makeText(this, R.string.upload_success, Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
-    }
 
 //        // 사진 업로드! 업로드 완료 토스트 메시지 알림
 //        storageRef?.putFile(photoUri!!)?.addOnSuccessListener { task ->
@@ -111,6 +117,7 @@ class AddPhotoActivity : AppCompatActivity() {
 //                Toast.makeText(this, R.string.upload_fail, Toast.LENGTH_SHORT).show()
 //            }
 //        }
+    }
 }
 
 

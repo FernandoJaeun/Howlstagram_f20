@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,6 +25,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         // 앨범 접근 권한 요청, 앱 설치 중 최초 1회만 요청
         requestPermissionPhotoAlbum()
 
+        // 메인 화면에 리싸이클러 뷰 내용이 젤 먼저 뜰 수 있게 세팅
+        bottom_navigation.selectedItemId = R.id.action_home
     }
 
     private fun requestPermissionPhotoAlbum() {
