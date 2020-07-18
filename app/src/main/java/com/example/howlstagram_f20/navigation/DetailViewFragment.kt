@@ -115,16 +115,17 @@ class DetailViewFragment : Fragment() {
         }
 
         fun favoriteEvent(position: Int) {
+            // 좋아요가 눌러져 있는 상태 = uid 값이 있는 상태.
             var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
             firestore?.runTransaction { transaction ->
 
                 var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
 
-                if (contentDTO!!.favorites.containsKey(uid)) {
-                    // 좋아요를 눌렀을 시
+                if (contentDTO!!.favorites.containsKey(uid)) { // 이미 uid 값을 가지고 있다 == 좋아요가 이미 눌러져 있다.
+                    // 좋아요 눌러진 상태에서 또 눌렀으니 좋아요 취소,
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount!! - 1
                     contentDTO?.favorites.remove(uid)
-                } else { // 눌러있지 않다
+                } else {
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount!! + 1
                     contentDTO?.favorites[uid!!] = true
                 }
