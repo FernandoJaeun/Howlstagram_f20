@@ -1,8 +1,15 @@
 package com.example.howlstagram_f20
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.howlstagram_f20.navigation.AddPhotoActivity
 import com.example.howlstagram_f20.navigation.DetailViewFragment
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -14,8 +21,16 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setContentView(R.layout.activity_main)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
+        // 앨범 접근 권한 요청, 앱 설치 중 최초 1회만 요청
+        requestPermissionPhotoAlbum()
+
     }
 
+    private fun requestPermissionPhotoAlbum() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+    }
+
+    // 네비게이션 바의 항목을 클릭했을 때 내가 만든 코드를 실행한다.
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
         when (p0.itemId) {
             R.id.action_home -> {
@@ -29,7 +44,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_photo -> {
-
+                // 앨범 접근 권한 요청이 정상적으로 허용되었을 때, AddPhotoActivity 클래스를 작동시킨다.
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(Intent(this, AddPhotoActivity::class.java))
+                } else {
+                    Toast.makeText(this, "앨범 접근 권한이 없습니다. 접근 허용을 한 뒤 다시 시도하세요", Toast.LENGTH_SHORT).show()
+                    requestPermissionPhotoAlbum()
+                }
                 return true
             }
             R.id.action_favorite_alarm -> {
