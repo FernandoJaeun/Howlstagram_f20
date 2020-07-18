@@ -15,7 +15,7 @@
         android:id="@+id/action_photo"
         android:enabled="true"
         android:icon="@drawable/ic_add_a_photo"
-        android:title="@string/cell_phone" />
+        android:title="@string/upload_image" />
     <item
         android:id="@+id/action_favorite_alarm"
         android:enabled="true"

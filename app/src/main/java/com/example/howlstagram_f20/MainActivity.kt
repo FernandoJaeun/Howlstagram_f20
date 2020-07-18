@@ -11,8 +11,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.howlstagram_f20.navigation.AddPhotoActivity
 import com.example.howlstagram_f20.navigation.DetailViewFragment
+import com.example.howlstagram_f20.navigation.UserFragment
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -23,9 +25,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
         // 앨범 접근 권한 요청, 앱 설치 중 최초 1회만 요청
-        requestPermissionPhotoAlbum()
+        bottom_navigation.setOnNavigationItemSelectedListener(this)
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1
+        )
 
-        // 메인 화면에 리싸이클러 뷰 내용이 젤 먼저 뜰 수 있게 세팅
+        //Set default screen
         bottom_navigation.selectedItemId = R.id.action_home
     }
 
@@ -62,7 +67,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_account -> {
-                val userFragment = DetailViewFragment()
+                var userFragment = UserFragment()
+                var bundle = Bundle()
+                var uid = FirebaseAuth.getInstance().currentUser?.uid
+
+                bundle.putString("destinationUid", uid)
+                userFragment.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment).commit()
                 return true
             }
