@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.howlstagram_f20.R
 import com.example.howlstagram_f20.navigation.model.ContentDTO
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_detail_view.view.*
 import kotlinx.android.synthetic.main.item_detail.*
@@ -21,9 +22,11 @@ import kotlinx.android.synthetic.main.item_detail.view.*
 class DetailViewFragment : Fragment() {
 
     private lateinit var firestore: FirebaseFirestore
+    private var uid: String? = null
 
     private fun init() {
         firestore = FirebaseFirestore.getInstance()
+        uid = FirebaseAuth.getInstance().currentUser?.uid
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -96,9 +99,37 @@ class DetailViewFragment : Fragment() {
 
             // Explain of content
             viewholder.detail_view_item_explain_text_view.text = contentDTOs!![position].explain
+            
+            // 좋아요 버튼을 눌렀을 때
+            viewholder.detail_view_item_favorite_image_view.setOnClickListener{ favoriteEvent(position)}
+            
+            // 페이지가 로드 됐을 때
+            if (contentDTOs!![position].favorites.containsKey(uid)) {
+                // 좋아요 누른 상태
+                viewholder.detail_view_item_favorite_image_view.setImageResource(R.drawable.ic_favorite)
+                
+            } else {
+                // 좋아요 아닌 상태
+                viewholder.detail_view_item_favorite_image_view.setImageResource(R.drawable.ic_favorite_border)
+            }
+        }
 
+        fun favoriteEvent(position: Int) {
+            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+            firestore?.runTransaction { transaction ->
 
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
 
+                if (contentDTO!!.favorites.containsKey(uid)) {
+                    // 좋아요를 눌렀을 시
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount!! - 1
+                    contentDTO?.favorites.remove(uid)
+                } else { // 눌러있지 않다
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount!! + 1
+                    contentDTO?.favorites[uid!!] = true
+                }
+                transaction.set(tsDoc, contentDTO)
+            }
 
         }
     }
