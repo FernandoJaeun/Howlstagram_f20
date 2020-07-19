@@ -63,7 +63,6 @@ class DetailViewFragment : Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             var view = LayoutInflater.from(parent.context).inflate(R.layout.item_detail, parent, false)
             return CustomViewHolder(view)
-
         }
 
         // 메모리를 적게 차지하기 위해서 만든 약속. 문법과 상관 없이 필요한 부분
@@ -81,11 +80,11 @@ class DetailViewFragment : Fragment() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             // item_detail 에서 View 에 대한 정보를 넣을 예정, 우선 호출한다.
             var viewholder = (holder as CustomViewHolder).itemView
-//            // Profile Image
-////            Glide
-////                .with(holder.itemView.context)
-////                .load(contentDTOs!![position].imageUrl)
-////                .into(viewholder.detail_view_item_profile_image)
+            // Profile Image
+//            Glide
+//                .with(holder.itemView.context)
+//                .load(contentDTOs!![position].imageUrl)
+//                .into(viewholder.detail_view_item_profile_image)
 
             // UserID
             viewholder.detail_view_item_profile_name.text = contentDTOs!![position].userId
@@ -112,6 +111,16 @@ class DetailViewFragment : Fragment() {
                 // 좋아요 아닌 상태
                 viewholder.detail_view_item_favorite_image_view.setImageResource(R.drawable.ic_favorite_border)
             }
+            // 상대방 프로필 이미지를 클릭했을 때
+            viewholder.detail_view_item_profile_image.setOnClickListener{
+                var fragment = UserFragment()
+                var bundle = Bundle()
+                bundle.putString("destinationUid", contentDTOs[position].uid) // 내 uid
+                bundle.putString("userUid", contentDTOs[position].userId) // 식별자 : 아이디
+                fragment.arguments = bundle //UserFragment에서 uid랑 userID 부분만 바꿨구나
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commit()
+            }
+
         }
 
         fun favoriteEvent(position: Int) {

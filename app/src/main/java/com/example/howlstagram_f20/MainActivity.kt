@@ -6,12 +6,11 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.howlstagram_f20.navigation.AddPhotoActivity
-import com.example.howlstagram_f20.navigation.DetailViewFragment
-import com.example.howlstagram_f20.navigation.UserFragment
+import com.example.howlstagram_f20.navigation.*
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +39,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     // 네비게이션 바의 항목을 클릭했을 때 내가 만든 코드를 실행한다.
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
+        setToolbarDefault()
         when (p0.itemId) {
             R.id.action_home -> {
                 val detailViewFragment = DetailViewFragment()
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_search -> {
-                val gridFragment = DetailViewFragment()
+                val gridFragment = GridFragment()
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, gridFragment).commit()
                 return true
             }
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_favorite_alarm -> {
-                val alarmFragment = DetailViewFragment()
+                val alarmFragment = AlarmFragment()
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, alarmFragment).commit()
                 return true
             }
@@ -78,5 +78,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
         }
         return false
+    }
+    fun setToolbarDefault(){
+        toolbar_userID.visibility = View.GONE
+        toolbar_btn_back.visibility = View.GONE
+        toolbar_title_image.visibility = View.GONE
     }
 }

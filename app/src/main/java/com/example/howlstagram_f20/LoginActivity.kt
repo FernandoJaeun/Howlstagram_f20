@@ -34,6 +34,11 @@ class LoginActivity : AppCompatActivity() {
         sign_in_by_google.setOnClickListener() { googleLogin() }
     }
 
+    // 자동 로그인
+//    override fun onStart() {
+//        super.onStart()
+//        moveMainPage(auth?.currentUser)
+//    }
     private fun googleLogin() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, GOOGLE_LOGIN_CODE)
@@ -104,6 +109,7 @@ class LoginActivity : AppCompatActivity() {
     private fun moveMainPage(user: FirebaseUser?) {
         if (user != null) {
             startActivity((Intent(this, MainActivity::class.java)))
+            finish() // MainActivity가 꺼짐
         }
 
     }
