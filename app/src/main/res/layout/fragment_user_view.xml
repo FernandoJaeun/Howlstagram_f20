@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/account_iv_profile"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -68,7 +68,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/post"
+                    android:text="@string/follower"
                     android:textStyle="bold" />
 
                 <TextView
